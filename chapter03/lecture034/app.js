@@ -15,7 +15,7 @@ function handlePostBody ( request, response ) {
 
         const parsedBody = Buffer.concat ( bodyChunks ).toString ();
 
-        console.log (`Received ${request.method} ${request.url} \nbody: ${parsedBody}`);
+        console.log ( `Received ${request.method} ${request.url} \nbody: ${parsedBody}` );
 
         response.statusCode = 204;
         response.end ();
