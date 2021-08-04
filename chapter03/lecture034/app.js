@@ -13,9 +13,10 @@ function handlePostBody ( request, response ) {
     // Register handler for the end of the data stream of the request body
     request.on ( "end", () => {
 
+        const date = new Date ()
         const parsedBody = Buffer.concat ( bodyChunks ).toString ();
 
-        console.log ( `Received ${request.method} ${request.url} \nbody: ${parsedBody}` );
+        console.log ( `${date} Received ${request.method} ${request.url} \nbody: ${parsedBody}` );
 
         response.statusCode = 204;
         response.end ();
