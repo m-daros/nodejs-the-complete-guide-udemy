@@ -1,0 +1,29 @@
+{
+  "name": "lecture043",
+  "version": "1.0.0",
+  "description": "Project exercises for lecture042",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js",
+    "my-custom-task-1": "echo 'This is my custom task !'",
+    "my-custom-task-2": "node custom-task.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-daros/nodejs-the-complete-guide-udemy.git"
+  },
+  "author": "m-daros",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-daros/nodejs-the-complete-guide-udemy/issues"
+  },
+  "homepage": "https://github.com/m-daros/nodejs-the-complete-guide-udemy#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "nodemonConfig": {
+    "ignore": [ "test/*", "docs/*" ],
+    "delay": 1000
+  }
+}
