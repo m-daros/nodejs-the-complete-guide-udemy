@@ -64,6 +64,7 @@ const handleRequest = ( request, response ) => {
     }
 }
 
+// Exports the required functions
 module.exports = {
 
     handleRequest: handleRequest
