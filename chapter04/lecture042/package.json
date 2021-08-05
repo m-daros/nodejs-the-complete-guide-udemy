@@ -1,0 +1,21 @@
+{
+  "name": "lecture042",
+  "version": "1.0.0",
+  "description": "Project exercises for lecture042",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js",
+    "my-custom-task": "echo 'This is my custom task !'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-daros/nodejs-the-complete-guide-udemy.git"
+  },
+  "author": "m-daros",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-daros/nodejs-the-complete-guide-udemy/issues"
+  },
+  "homepage": "https://github.com/m-daros/nodejs-the-complete-guide-udemy#readme"
+}
