@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "my-custom-task": "echo 'This is my custom task !'"
+    "my-custom-task-1": "echo 'This is my custom task !'",
+    "my-custom-task-2": "node custom-task.js"
   },
   "repository": {
     "type": "git",
