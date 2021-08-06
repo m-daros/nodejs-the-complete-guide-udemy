@@ -44,7 +44,7 @@ app.get ( "/products-view", ( request, response, next ) => {
 } )
 
 
-app.get ( "/", ( request, response, next ) => {
+app.use ( "/", ( request, response, next ) => {
 
     console.log ( "No exlicit route was found, using default route" )
     response.send ( "<h1>This can be used as default page<h1>" )
