@@ -1,4 +1,3 @@
-const express = require ( "express" );
 const path = require ( "path" )
 
 const projectRootFolder = require ( "../util/path.js" )

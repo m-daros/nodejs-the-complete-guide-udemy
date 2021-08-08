@@ -1,5 +1,3 @@
-const express = require ( "express" );
-
 var customers = [];
 customers.push ( { name: "Mario", surname: "Rossi" } );
 customers.push ( { name: "Marco", surname: "Bianchi" } );
