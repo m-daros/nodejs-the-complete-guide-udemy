@@ -10,4 +10,6 @@ router.post ( "/add-product", productController.addProduct );
 
 router.get ( "/products-view", productController.productsView );
 
+router.get ( "/product-detail-view/:productId", productController.productDetailView );
+
 module.exports = router;
