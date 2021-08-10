@@ -2,8 +2,8 @@ const customerRepository = require ( "../repositories/customer-repository.js" );
 const Customer = require ( "../models/customer.js" );
 
 // Add some customer
-customerRepository.addCustomer ( new Customer ( "Mario", "Rossi", 24 ) );
-customerRepository.addCustomer ( new Customer ( "Marco", "Bianchi", 32 ) );
+customerRepository.addCustomer ( new Customer ( 1, "Mario", "Rossi", 24 ) );
+customerRepository.addCustomer ( new Customer ( 2, "Marco", "Bianchi", 32 ) );
 
 exports.customersView = ( request, response, next ) => {
 
