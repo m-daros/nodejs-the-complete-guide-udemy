@@ -5,6 +5,12 @@ const Customer = require ( "../models/customer.js" );
 exports.addCustomer = ( customer ) => {
 
     return db.execute ( "INSERT INTO CUSTOMERS ( name, surname, age ) VALUES ( ?, ?, ? )", [ customer.name, customer.surname, customer.age ] )
+        .catch ( error => {
+
+            const message = `Unable to add customer. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
+        } );
 };
 
 exports.getCustomers = () => {
@@ -19,11 +25,27 @@ exports.getCustomers = () => {
                 customers.push ( new Customer ( record.id, record.name, record.surname, record.age ) );
             } )
 
-            return Promise.resolve ( customers );    // TODO PROVARE SENZSA Promise.resolve
+            return Promise.resolve ( customers );
         } )
         .catch ( error => {
 
-            console.log ( `Unable to get customers. Error: ${error}` )
-            return Promise.reject ( [] );     // TODO PROVARE SENZSA Promise.reject
+            const message = `Unable to get customers. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
         } );
+};
+
+exports.deleteCustomers = () => {
+
+    return db.execute ( "DELETE FROM CUSTOMERS" )
+        .then ( () => {
+
+            Promise.resolve ()
+        } )
+        .catch ( error => {
+
+            const message = `Unable to delete customers. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
+        } )
 };

@@ -5,9 +5,15 @@ const Product = require ( "../models/product.js" );
 exports.addProduct = ( product ) => {
 
     return db.execute ( "INSERT INTO PRODUCTS ( name ) VALUES ( ? )", [ product.name ] )
+        .catch ( error => {
+
+            const message = `Unable to add product. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
+        } );
 };
 
-exports.getProducts = async () => {
+exports.getProducts = () => {
 
     return db.execute ( "SELECT id, name FROM PRODUCTS" )
         .then ( results => {
@@ -19,27 +25,29 @@ exports.getProducts = async () => {
                 products.push ( new Product ( record.id, record.name ) );
             } )
 
-            return Promise.resolve ( products );    // TODO PROVARE SENZSA Promise.resolve
+            return Promise.resolve ( products );
         } )
         .catch ( error => {
 
-            console.log ( `Unable to get products. Error: ${error}` )
-            return Promise.reject ( [] );     // TODO PROVARE SENZSA Promise.reject
+            const message = `Unable to get products. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
         } );
 };
 
-exports.getProduct = async ( productId ) => {
+exports.getProduct = ( productId ) => {
 
     return db.execute ( `SELECT id, name FROM PRODUCTS WHERE id = ${productId}` )
         .then ( results => {
 
             const record = results [0] [0]; // TODO DA MIGLIORARE
 
-            return Promise.resolve ( new Product ( record.id, record.name ) ); // TODO PROVARE SENZSA Promise.resolve
+            return Promise.resolve ( new Product ( record.id, record.name ) );
         } )
         .catch ( error => {
 
-            console.log ( `Unable to get product with id: ${productId}. Error: ${error}` )
-            return Promise.reject ( null );     // TODO PROVARE SENZSA Promise.reject
+            const message = `Unable to get product with id: ${productId}. Error: ${error}`;
+            console.log ( message )
+            return Promise.reject ( message );
         } );
 };
