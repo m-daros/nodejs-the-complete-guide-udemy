@@ -2,8 +2,7 @@ const path = require ( "path" );
 
 const projectRootFolder = require ( "../util/path.js" );
 const productRepository = require ( "../repositories/product-repository.js" );
-
-const Product = require ( "../orm/sequelize/model/product.js" );
+const ProductEntity = require ( "../orm/sequelize/model/product-entity.js" );
 
 exports.addProductView = ( request, response, next ) => {
 
@@ -14,7 +13,7 @@ exports.addProduct = ( request, response, next ) => {
 
     console.log ( request.body );
 
-    const product = Product.build ( { name: request.body [ "name" ] } );
+    const product = ProductEntity.build ( { name: request.body [ "name" ] } );
     productRepository.addProduct ( product )
         .then ( result => {
 

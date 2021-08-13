@@ -1,6 +1,4 @@
-const db = require ( "../orm/sequelize/sequelize-config" );
-
-const Customer = require ( "../orm/sequelize/model/customer.js" );
+const CustomerEntity = require ( "../orm/sequelize/model/customer-entity.js" );
 
 exports.addCustomer = ( customer ) => {
 
@@ -15,7 +13,7 @@ exports.addCustomer = ( customer ) => {
 
 exports.getCustomers = () => {
 
-    return Customer.findAll ()
+    return CustomerEntity.findAll ()
         .then ( customers => {
 
             return Promise.resolve ( customers );
@@ -30,7 +28,7 @@ exports.getCustomers = () => {
 
 exports.deleteCustomers = () => {
 
-    return Customer.destroy ( {
+    return CustomerEntity.destroy ( {
 
             where: {},
             truncate: true

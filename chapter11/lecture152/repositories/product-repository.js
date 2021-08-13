@@ -1,6 +1,4 @@
-const db = require ( "../orm/sequelize/sequelize-config" );
-
-const Product = require ( "../orm/sequelize/model/product.js" );
+const ProductEntity = require ( "../orm/sequelize/model/product-entity.js" );
 
 exports.addProduct = ( product ) => {
 
@@ -17,7 +15,7 @@ exports.addProduct = ( product ) => {
 
 exports.getProducts = () => {
 
-    return Product.findAll ()
+    return ProductEntity.findAll ()
         .then ( products => {
 
             return Promise.resolve ( products );
@@ -32,7 +30,7 @@ exports.getProducts = () => {
 
 exports.getProduct = ( productId ) => {
 
-    return Product.findByPk ( productId )
+    return ProductEntity.findByPk ( productId )
         .then ( product => {
 
             return Promise.resolve ( product );

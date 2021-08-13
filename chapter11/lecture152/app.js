@@ -7,7 +7,7 @@ const customerRoutes = require ( "./routes/customer-routes.js" );
 
 const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
 const customerRepository = require ( "./repositories/customer-repository.js" );
-const Customer = require ( "./orm/sequelize/model/customer.js" );
+const Customer = require ( "./orm/sequelize/model/customer-entity.js" );
 
 const app = express ();
 

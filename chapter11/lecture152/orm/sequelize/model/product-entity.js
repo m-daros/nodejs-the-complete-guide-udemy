@@ -2,7 +2,7 @@ const Sequelize = require ( "sequelize" );
 
 const sequelize = require ( "../sequelize-config.js" );
 
-const Product = sequelize.define ( "product", {
+const ProductEntity = sequelize.define ( "product", {
 
     id: {
 
@@ -25,4 +25,4 @@ const Product = sequelize.define ( "product", {
     ]
 } );
 
-module.exports = Product;
+module.exports = ProductEntity;
