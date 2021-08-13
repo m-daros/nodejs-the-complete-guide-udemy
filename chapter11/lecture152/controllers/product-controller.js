@@ -3,7 +3,7 @@ const path = require ( "path" );
 const projectRootFolder = require ( "../util/path.js" );
 const productRepository = require ( "../repositories/product-repository.js" );
 
-const Product = require ( "../models/product.js" );
+const Product = require ( "../orm/sequelize/model/product.js" );
 
 exports.addProductView = ( request, response, next ) => {
 

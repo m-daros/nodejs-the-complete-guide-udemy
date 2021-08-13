@@ -1,6 +1,6 @@
-const db = require ( "../config/orm-sequelize" );
+const db = require ( "../orm/sequelize/sequelize-config" );
 
-const Product = require ( "../models/product.js" );
+const Product = require ( "../orm/sequelize/model/product.js" );
 
 exports.addProduct = ( product ) => {
 

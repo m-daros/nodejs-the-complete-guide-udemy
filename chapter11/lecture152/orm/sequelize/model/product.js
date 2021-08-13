@@ -1,6 +1,6 @@
 const Sequelize = require ( "sequelize" );
 
-const sequelize = require ( "../config/orm-sequelize.js" );
+const sequelize = require ( "../sequelize-config.js" );
 
 const Product = sequelize.define ( "product", {
 

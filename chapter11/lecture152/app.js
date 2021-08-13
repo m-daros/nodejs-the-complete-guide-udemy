@@ -5,9 +5,9 @@ const defaultRoutes = require ( "./routes/default-routes.js" );
 const productRoutes = require ( "./routes/product-routes.js" );
 const customerRoutes = require ( "./routes/customer-routes.js" );
 
-const sequelize = require ( "./config/orm-sequelize.js" );
+const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
 const customerRepository = require ( "./repositories/customer-repository.js" );
-const Customer = require ( "./models/customer.js" );
+const Customer = require ( "./orm/sequelize/model/customer.js" );
 
 const app = express ();
 
