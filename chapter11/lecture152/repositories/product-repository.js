@@ -1,4 +1,7 @@
+// TODO Forse lo strato di repository è inutile, farebbe da passacarte al model definito da sequelize --> Il model sequelize potrebbe essere visto come repository
 const ProductEntity = require ( "../orm/sequelize/model/product-entity.js" );
+
+const relations = require ( "../orm/sequelize/model/relations.js" );
 
 exports.addProduct = ( product ) => {
 

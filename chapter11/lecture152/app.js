@@ -9,6 +9,8 @@ const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
 const customerRepository = require ( "./repositories/customer-repository.js" );
 const Customer = require ( "./orm/sequelize/model/customer-entity.js" );
 
+const modelRelations = require ( "./orm/sequelize/model/relations.js" );
+
 const app = express ();
 
 app.use ( appRoutes );

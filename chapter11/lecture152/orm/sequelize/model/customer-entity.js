@@ -37,6 +37,6 @@ const CustomerEntity = sequelize.define ( "customer", {
             unique: false
         }
     ]
-}  );
+} );
 
 module.exports = CustomerEntity;
