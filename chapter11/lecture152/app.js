@@ -23,7 +23,8 @@ initDB ();
 function initDB () {
 
     // Init the DB schema if necessary
-    sequelize.sync ()
+//    sequelize.sync ()
+    sequelize.sync ( { force: true } )
         .then ( result => {
 
             // Add some customer
