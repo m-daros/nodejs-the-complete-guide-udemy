@@ -18,3 +18,4 @@ CustomerEntity.hasMany ( OrderEntity );
 // and a product can belongs to many orders
 // (many to many association)
 ProductEntity.belongsToMany ( OrderEntity, { through: OrderProductEntity } )
+OrderEntity.belongsToMany ( ProductEntity, { through: OrderProductEntity } )

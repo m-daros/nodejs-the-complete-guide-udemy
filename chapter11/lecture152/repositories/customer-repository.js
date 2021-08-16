@@ -45,5 +45,5 @@ exports.deleteCustomers = () => {
             const message = `Unable to delete customers. Error: ${error}`;
             console.log ( message )
             return Promise.reject ( message );
-        } )
+        } );
 };

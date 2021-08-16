@@ -45,3 +45,22 @@ exports.getProduct = ( productId ) => {
             return Promise.reject ( message );
         } );
 };
+
+exports.deleteProducts = () => {
+
+    return ProductEntity.destroy ( {
+
+        where: {},
+        truncate: false
+    } )
+    .then ( () => {
+
+        Promise.resolve ()
+    } )
+    .catch ( error => {
+
+        const message = `Unable to delete products. Error: ${error}`;
+        console.log ( message )
+        return Promise.reject ( message );
+    } );
+};
