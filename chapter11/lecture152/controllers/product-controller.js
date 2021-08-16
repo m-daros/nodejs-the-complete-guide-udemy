@@ -1,7 +1,6 @@
 const path = require ( "path" );
 
 const projectRootFolder = require ( "../util/path.js" );
-const productRepository = require ( "../repositories/product-repository.js" );
 const { ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model.js" );
 
 exports.addProductView = ( request, response, next ) => {
@@ -13,11 +12,10 @@ exports.addProduct = ( request, response, next ) => {
 
     console.log ( request.body );
 
-    const product = ProductEntity.build ( { name: request.body [ "name" ] } );
-    productRepository.addProduct ( product )
+    ProductEntity.create ( { name: request.body [ "name" ] } )
         .then ( result => {
 
-            console.log ( `RESULT: ${result}` );
+            console.log ( `RESULT: ${result}` ); // TODO TMP
             response.redirect ( "/products-view" );
         } )
         .catch ( error => {
@@ -30,7 +28,7 @@ exports.addProduct = ( request, response, next ) => {
 
 exports.productsView = ( request, response, next ) => {
 
-    productRepository.getProducts ()
+    ProductEntity.findAll ()
         .then ( products => {
 
             response.write ( "<h1>Products<h1>" );
@@ -57,7 +55,7 @@ exports.productDetailView = ( request, response, next ) => {
 
     const productId = parseInt ( request.params.productId , 10 );
 
-    productRepository.getProduct ( productId )
+    ProductEntity.findByPk ( productId )
         .then ( product => {
 
             response.write ( "<h1>Product detail<h1>" );

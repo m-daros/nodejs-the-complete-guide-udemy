@@ -7,12 +7,8 @@ const customerRoutes = require ( "./routes/customer-routes.js" );
 const orderRoutes = require ( "./routes/order-routes.js" );
 
 const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
-const customerRepository = require ( "./repositories/customer-repository.js" );
-const productRepository = require ( "./repositories/product-repository.js" );
 
 const { CustomerEntity, ProductEntity } = require ( "./orm/sequelize/model/sequelize-orm-model" );
-
-//const modelRelations = require ( "./orm/sequelize/model/relations.js" );
 
 const app = express ();
 
@@ -24,7 +20,6 @@ app.use ( orderRoutes );
 // These routes must be added as last routes (they mask other routes)
 app.use ( defaultRoutes );
 
-
 initDB ();
 
 function initDB () {
@@ -34,18 +29,18 @@ function initDB () {
     sequelize.sync ( { force: true } )
         .then ( result => {
 
-            customerRepository.deleteCustomers ();
-            productRepository.deleteProducts ();
+            CustomerEntity.destroy ( { where: {}, truncate: false } );
+            ProductEntity.destroy ( { where: {}, truncate: false } );
         })
         .then (() => {
 
             // Add some customer
-            customerRepository.addCustomer ( CustomerEntity.build ( { name: "Mario", surname: "Rossi", age: 24 } ) );
-            customerRepository.addCustomer ( CustomerEntity.build ( { name: "Marco", surname: "Bianchi", age: 32 } ) );
+            CustomerEntity.create ( { name: "Mario", surname: "Rossi", age: 24 } );
+            CustomerEntity.create ( { name: "Marco", surname: "Bianchi", age: 32 } );
 
             // Add some product
-            productRepository.addProduct ( ProductEntity.build ( { name: "Samsung Galaxy S10" } ) );
-            productRepository.addProduct ( ProductEntity.build ( { name: "Samsung Galaxy S4" } ) );
+            ProductEntity.create ( { name: "Samsung Galaxy S10" } );
+            ProductEntity.create ( { name: "Samsung Galaxy S4" } );
         })
         .then (() => {
 

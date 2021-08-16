@@ -1,8 +1,8 @@
-const customerRepository = require ( "../repositories/customer-repository.js" );
+const { CustomerEntity } = require ( "../orm/sequelize/model/sequelize-orm-model.js" );
 
 exports.customersView = ( request, response, next ) => {
 
-    customerRepository.getCustomers ()
+    CustomerEntity.findAll ()
         .then ( customers => {
 
             response.write ( "<h1>Customers<h1>" );

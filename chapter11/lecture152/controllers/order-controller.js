@@ -1,13 +1,10 @@
 const path = require ( "path" );
 
-const orderRepository = require ( "../repositories/order-repository.js" );
-const productRepository = require ( "../repositories/product-repository.js" );
-
 const { OrderEntity, ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model" );
 
 exports.addOrderView = ( request, response, next ) => {
 
-    productRepository.getProducts ()
+    ProductEntity.findAll ()
         .then ( products => {
 
             response.write ( "<h1>Add order</h1>" );
@@ -68,7 +65,8 @@ exports.addOrder = ( request, response, next ) => {
 
 exports.ordersView = ( request, response, next ) => {
 
-    orderRepository.getOrdersByCustomer ( 1 ) // TODO get customerId from the logged user
+    // TODO get customerId from the logged user
+    OrderEntity.findAll ( { where: { customerId: 1 } } )
         .then ( orders => {
 
             response.write ( "<h1>Orders<h1>" );
@@ -95,7 +93,7 @@ exports.orderDetailView = ( request, response, next ) => {
 
     const orderId = parseInt ( request.params.orderId , 10 );
 
-    orderRepository.getOrder ( orderId )
+    OrderEntity.findByPk ( orderId, { include: ProductEntity } )
         .then ( order => {
 
             response.write ( "<h1>Order detail<h1>" );
