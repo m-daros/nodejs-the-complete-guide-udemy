@@ -1,24 +1,13 @@
 const express = require ( "express" );
 
-const appRoutes = require ( "./routes/app-routes.js" );
-const defaultRoutes = require ( "./routes/default-routes.js" );
-const productRoutes = require ( "./routes/product-routes.js" );
-const customerRoutes = require ( "./routes/customer-routes.js" );
-const orderRoutes = require ( "./routes/order-routes.js" );
+const routes = require ( "./routes/routes" );
 
 const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
 
 const { CustomerEntity, ProductEntity } = require ( "./orm/sequelize/model/sequelize-orm-model" );
 
 const app = express ();
-
-app.use ( appRoutes );
-app.use ( productRoutes );
-app.use ( customerRoutes );
-app.use ( orderRoutes );
-
-// These routes must be added as last routes (they mask other routes)
-app.use ( defaultRoutes );
+app.use ( routes );
 
 initDB ();
 
