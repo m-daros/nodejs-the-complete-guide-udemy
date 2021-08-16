@@ -10,10 +10,9 @@ const sequelize = require ( "./orm/sequelize/sequelize-config.js" );
 const customerRepository = require ( "./repositories/customer-repository.js" );
 const productRepository = require ( "./repositories/product-repository.js" );
 
-const Customer = require ( "./orm/sequelize/model/customer-entity.js" );
-const Product = require ( "./orm/sequelize/model/product-entity.js" );
+const { CustomerEntity, ProductEntity } = require ( "./orm/sequelize/model/sequelize-orm-model" );
 
-const modelRelations = require ( "./orm/sequelize/model/relations.js" );
+//const modelRelations = require ( "./orm/sequelize/model/relations.js" );
 
 const app = express ();
 
@@ -41,12 +40,12 @@ function initDB () {
         .then (() => {
 
             // Add some customer
-            customerRepository.addCustomer ( Customer.build ( { name: "Mario", surname: "Rossi", age: 24 } ) );
-            customerRepository.addCustomer ( Customer.build ( { name: "Marco", surname: "Bianchi", age: 32 } ) );
+            customerRepository.addCustomer ( CustomerEntity.build ( { name: "Mario", surname: "Rossi", age: 24 } ) );
+            customerRepository.addCustomer ( CustomerEntity.build ( { name: "Marco", surname: "Bianchi", age: 32 } ) );
 
             // Add some product
-            productRepository.addProduct ( Product.build ( { name: "Samsung Galaxy S10" } ) );
-            productRepository.addProduct ( Product.build ( { name: "Samsung Galaxy S4" } ) );
+            productRepository.addProduct ( ProductEntity.build ( { name: "Samsung Galaxy S10" } ) );
+            productRepository.addProduct ( ProductEntity.build ( { name: "Samsung Galaxy S4" } ) );
         })
         .then (() => {
 

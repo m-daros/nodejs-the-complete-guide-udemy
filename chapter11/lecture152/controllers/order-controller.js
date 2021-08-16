@@ -3,8 +3,7 @@ const path = require ( "path" );
 const orderRepository = require ( "../repositories/order-repository.js" );
 const productRepository = require ( "../repositories/product-repository.js" );
 
-const OrderEntity = require ( "../orm/sequelize/model/order-entity.js" );
-const ProductEntity = require ( "../orm/sequelize/model/product-entity.js" );
+const { OrderEntity, ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model" );
 
 exports.addOrderView = ( request, response, next ) => {
 
@@ -103,6 +102,22 @@ exports.orderDetailView = ( request, response, next ) => {
             response.write ( "<ul>" );
             response.write ( `<li>Id: ${order.id} date: ${order.date}</li>` );
             response.write ( "</ul>" );
+
+            response.write ( "<br/>" );
+
+            const products = order.products;
+            console.log ( `PRODUCTS: ${JSON.stringify ( products )}` );
+
+            products.forEach ( product => {
+
+                // Get the attributes of the associations (many to many)
+                const orderProduct = product.order_product;
+                console.log ( `ORDER-PRODUCT: ${JSON.stringify ( orderProduct )}` );
+
+                response.write ( `product: ${product.name} quantity: ${orderProduct.quantity}<br/>` );
+            } )
+
+            response.write ( "<br/>" );
             response.write ( "<a href='/orders-view'>Show all orders</a>" );
 
             // TODO Lista dei prodotti nell'ordine
