@@ -37,18 +37,18 @@ exports.addOrderView = ( request, response, next ) => {
 
 exports.addOrder = ( request, response, next ) => {
 
-    // TODO NON USA i repositories, usa direttamente il model sequelize (il model sequelize può esere visto come repository)
-
     // TODO CAPIRE SE GLI INSERT VENGONO FATTI IN MODO TRANSAZIONALE
     const orderPromise = OrderEntity.create ( { date: new Date (), customerId: 1 } ); // TODO Get customnerId from the logged user
     const productPromise = ProductEntity.findByPk ( parseInt ( request.body [ "productId" ] ) );
 
+    // Orchestrate the 2 promises (the 2 queries) adding the product to the order when both the 2 queries are ready
     Promise.all ( [ orderPromise, productPromise ] )
         .then ( results => {
 
             const order = results [0];
             const product = results [1];
 
+            // Add the product to the order through the order_product association, assign the attribute quantity to the association
             order.addProduct ( product, { through: { quantity: parseInt ( request.body [ "quantity" ] ) } } );
         } )
         .then ( result => {
@@ -103,22 +103,19 @@ exports.orderDetailView = ( request, response, next ) => {
 
             response.write ( "<br/>" );
 
+            // Access the product associated to the order (many to meny)
             const products = order.products;
-            console.log ( `PRODUCTS: ${JSON.stringify ( products )}` );
 
             products.forEach ( product => {
 
                 // Get the attributes of the associations (many to many)
                 const orderProduct = product.order_product;
-                console.log ( `ORDER-PRODUCT: ${JSON.stringify ( orderProduct )}` );
 
                 response.write ( `product: ${product.name} quantity: ${orderProduct.quantity}<br/>` );
             } )
 
             response.write ( "<br/>" );
             response.write ( "<a href='/orders-view'>Show all orders</a>" );
-
-            // TODO Lista dei prodotti nell'ordine
 
             response.send ();
         } )
