@@ -1,0 +1,41 @@
+{
+  "name": "lecture466",
+  "version": "1.0.0",
+  "description": "Exercises for lecture466",
+  "main": "app.js",
+  "scripts": {
+    "test": "find ./test -name '*.spec.js' | xargs mocha -R spec",
+    "start": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m-daros/nodejs-the-complete-guide-udemy.git"
+  },
+  "author": "m-daros",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/m-daros/nodejs-the-complete-guide-udemy/issues"
+  },
+  "homepage": "https://github.com/m-daros/nodejs-the-complete-guide-udemy#readme",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.0",
+    "nodemon": "^2.0.12"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "test/*",
+      "docs/*"
+    ],
+    "delay": 1000
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5",
+    "socket.io": "^4.1.3",
+    "uuid": "^8.3.2"
+  }
+}
