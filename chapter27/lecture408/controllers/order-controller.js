@@ -1,8 +1,10 @@
 const { validationResult } = require ( "express-validator" );
-const sequelize = require ( "../orm/sequelize/sequelize-config" );
+const { v4: uuidv4 } = require ( "uuid" );
 
-const { OrderEntity, ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model" );
+const sequelize = require ( "../orm/sequelize/sequelize-config.js" );
+const { OrderEntity, ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model.js" );
 const webSocket = require ( "../websocket/websocket.js" );
+const { AppError, ErrorType, logError } = require ( "../model/error-model.js" );
 
 exports.addOrder = async ( request, response, next ) => {
 
@@ -15,10 +17,12 @@ exports.addOrder = async ( request, response, next ) => {
 
         if ( ! errors.isEmpty () ) {
 
-            // TODO Introduce common error model
-            console.log ( "VALIDATION KO !!!" );
-            response.status ( 400 );
-            response.json ( { errors: errors.array () } );
+            const appError = new AppError ( uuidv4 (), ErrorType.VALIDATION_ERROR, "Unable to add order due to validation error" )
+
+            logError ( appError, `Unable to add order due to validation error` );
+
+            response.status ( 400 )
+                .json ( appError );
         }
         else {
 
@@ -43,10 +47,12 @@ exports.addOrder = async ( request, response, next ) => {
         }
     } catch ( error )  {
 
-        // TODO Introduce common error model
-        console.log ( `ERROR: ${error}`)
+        const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, "Unable to add the order" );
+
+        logError ( appError, `Unable to add order due to error ${error}` );
+
         response.status ( 500 )
-            .json ( { message: `Unable to save order: TODO IMPROVE MESSAGE` } );
+            .json ( appError ); // TODO Non sembra trasmettere il payload json dell'errore
     }
 };
 
@@ -61,10 +67,12 @@ exports.getOrders = ( request, response, next ) => {
         } )
         .catch ( error => {
 
-            // TODO Introduce common error model
-            console.log ( `ERROR: ${error}` )
-            response.status ( 500 );
-            response.send ( "Unable to show orders" );
+            const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, "Unable to get orders" );
+
+            logError ( appError, `Unable to get orders due to error ${error}` )
+
+            response.status ( 500 )
+                .json ( appError );
         } );
 };
 
@@ -77,11 +85,12 @@ exports.getOrder = ( request, response, next ) => {
 
             if ( ! order ) {
 
-                console.error ( `Unable to find order with id ${orderId}` );
+                const appError = new AppError ( uuidv4 (), ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find the order with id ${orderId}` );
 
-                // TODO Introduce common error model
+                logError ( appError, `Unable to find the order with id ${orderId}` );
+
                 response.status ( 404 )
-                    .json ( { message: `Unable to find order with id ${orderId}` } )
+                    .json ( appError );
             }
             else {
 
@@ -91,14 +100,18 @@ exports.getOrder = ( request, response, next ) => {
         } )
         .catch ( error => {
 
-            // TODO Introduce common error model
-            console.log ( `ERROR: ${error}` )
-            response.status ( 500 );
-            response.send ( `Unable to show order with id ${orderId}` );
+            const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, `Unable to find the order with id ${orderId}` );
+
+            logError ( appError, `Unable to find the order with id ${orderId} due to error ${error}` );
+
+            response.status ( 500 )
+                .json ( appError );
         } );
 };
 
 const addProductToOrder = async ( product, order, transaction ) => {
+
+    console.log ( crasha );
 
     // Doesn't work if we add the product received from the request body, so as workaround we find the product doing a DB query
     const foundProd = await ProductEntity.findByPk ( product.order_product.productId, { transaction: transaction } )
