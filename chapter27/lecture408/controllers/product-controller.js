@@ -1,67 +1,66 @@
+const { v4: uuidv4 } = require ( "uuid" );
+
 const { ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model.js" );
+const { AppError, ErrorType, logError } = require ( "../model/error-model.js" );
 
-exports.addProduct = ( request, response, next ) => {
+exports.addProduct = async ( request, response, next ) => {
 
-    console.log ( request.body );
+    try {
 
-    ProductEntity.create ( { name: request.body [ "name" ] } )
-        .then ( product => {
+        const product = await ProductEntity.create ( { name: request.body [ "name" ] } )
 
-            response.status ( 200 )
-                .json ( product );
-        } )
-        .catch ( error => {
+        response.status ( 200 ).json ( product );
+    }
+    catch ( error ) {
 
-            // TODO DATA MODEL COMUNE DEGLI ERRORI
-            console.log ( `ERROR: ${error}` )
-            response.status ( 500 );
-            response.send ( `Unable to save product with name: ${product.name}` );
-        } )
+        const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, `Unable to add product` );
+        logError ( appError, `Unable to add product due to error ${error}` );
+
+        response.status ( 500 ).json ( appError );
+    }
 };
 
-exports.getProducts = ( request, response, next ) => {
+exports.getProducts = async ( request, response, next ) => {
 
-    ProductEntity.findAll ()
-        .then ( products => {
+    try {
 
-            response.status ( 200 )
-                .json ( products );
-        } )
-        .catch ( error => {
+        const products = await ProductEntity.findAll ()
 
-            // TODO DATA MODEL COMUNE PER GLI ERRORI
-            console.log ( `ERROR: ${error}` )
-            response.status ( 500 );
-            response.send ( "Unable to show products" );
-        } );
+        response.status ( 200 ).json ( products );
+    }
+    catch ( error ) {
+
+        const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, `Unable to get products` );
+        logError ( appError, `Unable to get products due to error ${error}` );
+
+        response.status ( 500 ).json ( appError );
+    }
 };
 
-exports.getProduct = ( request, response, next ) => {
+exports.getProduct = async ( request, response, next ) => {
 
-    const productId = parseInt ( request.params.productId , 10 );
+    try {
 
-    ProductEntity.findByPk ( productId )
-        .then ( product => {
+        const productId = parseInt ( request.params.productId , 10 );
+        const product = await ProductEntity.findByPk ( productId )
 
-            if ( ! product ) {
+        if ( ! product ) {
 
-                console.error ( `Unable to find product with id ${productId}` );
+            const appError = new AppError ( uuidv4 (), ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find product with id ${productId}` );
+            logError ( appError, `Unable to find product with id ${productId}` );
 
-                // TODO USARE DATA MODEL DEGLI ERRORI
-                response.status ( 404 )
-                    .json ( { message: `Unable to find product with id ${productId}` } )
-            }
-            else {
+            response.status ( 404 ).json ( appError )
+        }
+        else {
 
-                response.status ( 200 )
-                    .json ( product );
-            }
-        } )
-        .catch ( error => {
+            response.status ( 200 ).json ( product );
+        }
+    }
+    catch ( error ) {
 
-            // TODO DATA MODEL COMUNE PER GLI ERRORI
-            console.error ( `ERROR: ${error}` )
-            response.status ( 500 );
-            response.send ( `Unable to show product with id ${productId}` );
-        } );
+        const appError = new AppError ( uuidv4 (), ErrorType.APPLICATION_ERROR, `Unable to find product with id ${productId}` );
+        logError ( appError, `Unable to find product with id ${productId} due to error ${error}` );
+
+        response.status ( 500 ).json ( appError );
+    }
 };
