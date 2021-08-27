@@ -41,7 +41,8 @@ exports.addOrder = async ( request, response, next ) => {
 
             response.status ( 201 ).json ( order );
         }
-    } catch ( error )  {
+    }
+    catch ( error )  {
 
         const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to add the order" );
         logError ( appError, `Unable to add order due to error ${error}` );
@@ -50,50 +51,53 @@ exports.addOrder = async ( request, response, next ) => {
     }
 };
 
-exports.getOrders = ( request, response, next ) => {
+exports.getOrders = async ( request, response, next ) => {
 
-    // TODO get customerId from the logged user
-    OrderEntity.findAll ( { where: { customerId: 1 }, include: ProductEntity } )
-        .then ( orders => {
+    try {
 
-            response.status ( 200 ).json ( orders );
-        } )
-        .catch ( error => {
+        // TODO get customerId from the logged user
+        const orders = OrderEntity.findAll ( { where: { customerId: 1 }, include: ProductEntity } )
 
-            const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to get orders" );
-            logError ( appError, `Unable to get orders due to error ${error}` )
+        response.status ( 200 ).json ( orders )
 
-            response.status ( 500 ).json ( appError );
-        } );
+    }
+    catch ( error ) {
+
+        const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to get orders" );
+        logError ( appError, `Unable to get orders due to error ${error}` )
+
+        response.status ( 500 ).json ( appError );
+    }
 };
 
-exports.getOrder = ( request, response, next ) => {
+exports.getOrder = async ( request, response, next ) => {
 
     const orderId = parseInt ( request.params.orderId , 10 );
 
-    OrderEntity.findByPk ( orderId, { include: ProductEntity } )
-        .then ( order => {
+    try {
 
-            if ( ! order ) {
+        const order = OrderEntity.findByPk ( orderId, { include: ProductEntity } )
 
-                const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find the order with id ${orderId}` );
-                logError ( appError, `Unable to find the order with id ${orderId}` );
+        if ( ! order ) {
 
-                response.status ( 404 ).json ( appError );
-            }
-            else {
+            const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find the order with id ${orderId}` );
+            logError ( appError, `Unable to find the order with id ${orderId}` );
 
-                response.status ( 200 ).json ( order );
-            }
-        } )
-        .catch ( error => {
+            response.status ( 404 ).json ( appError );
+        }
+        else {
 
-            const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find the order with id ${orderId}` );
-            logError ( appError, `Unable to find the order with id ${orderId} due to error ${error}` );
+            response.status ( 200 ).json ( order );
+        }
+    }
+    catch ( error ) {
 
-            response.status ( 500 ).json ( appError );
-        } );
-};
+        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find the order with id ${orderId}` );
+        logError ( appError, `Unable to find the order with id ${orderId} due to error ${error}` );
+
+        response.status ( 500 ).json ( appError );
+    }
+}
 
 const addProductToOrder = async ( product, order, transaction ) => {
 
