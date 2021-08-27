@@ -1,6 +1,6 @@
-const { ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model.js" );
-const { catchErrors } = require ( "../util/error-handling.js" );
-const { AppError, ErrorType, logError } = require ( "../model/error-model.js" );
+const { ProductEntity } = require ( "../orm/sequelize/model/sequelize-orm-model" )
+const { catchErrors } = require ( "../util/error-handling" )
+const { AppError, ErrorType, logError } = require ( "../model/error-model" )
 
 exports.addProduct = async ( request, response, next ) => {
 
@@ -8,16 +8,16 @@ exports.addProduct = async ( request, response, next ) => {
 
         const product = await ProductEntity.create ( { name: request.body [ "name" ] } )
 
-        response.status ( 201 ).json ( product );
+        response.status ( 201 ).json ( product )
     }
     catch ( error ) {
 
-        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to add product` );
-        logError ( appError, `Unable to add product due to error ${error}` );
+        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to add product` )
+        logError ( appError, `Unable to add product due to error ${error}` )
 
-        response.status ( 500 ).json ( appError );
+        response.status ( 500 ).json ( appError )
     }
-};
+}
 
 exports.getProducts = catchErrors ( async ( request, response, next ) => {
 
@@ -38,7 +38,7 @@ exports.getProducts = catchErrors ( async ( request, response, next ) => {
 
 exports.getProduct = async ( request, response, next ) => {
 
-    const productId = parseInt ( request.params.productId , 10 );
+    const productId = parseInt ( request.params.productId , 10 )
 
     try {
 
@@ -46,21 +46,21 @@ exports.getProduct = async ( request, response, next ) => {
 
         if ( ! product ) {
 
-            const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find product with id ${productId}` );
-            logError ( appError, `Unable to find product with id ${productId}` );
+            const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find product with id ${productId}` )
+            logError ( appError, `Unable to find product with id ${productId}` )
 
             response.status ( 404 ).json ( appError )
         }
         else {
 
-            response.status ( 200 ).json ( product );
+            response.status ( 200 ).json ( product )
         }
     }
     catch ( error ) {
 
-        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find product with id ${productId}` );
-        logError ( appError, `Unable to find product with id ${productId} due to error ${error}` );
+        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find product with id ${productId}` )
+        logError ( appError, `Unable to find product with id ${productId} due to error ${error}` )
 
-        response.status ( 500 ).json ( appError );
+        response.status ( 500 ).json ( appError )
     }
-};
+}

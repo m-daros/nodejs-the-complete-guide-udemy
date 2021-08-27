@@ -1,4 +1,4 @@
-let socketIO;
+let socketIO
 
 // TODO SEMBRA NON FUNZIONARE
 exports.init = ( httpServer ) => {

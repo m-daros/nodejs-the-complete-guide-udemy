@@ -5,6 +5,7 @@ const orderController = require ( "../../../controllers/order-controller" )
 const { OrderEntity } = require ( "../../../orm/sequelize/model/sequelize-orm-model" )
 const { ErrorType } = require ( "../../../model/error-model" )
 const { getResponseMock } = require ( "../../test-utils" )
+const webSocket = require ( "../../../websocket/websocket" );
 
 describe ( "order-controller", () => {
 
@@ -262,34 +263,43 @@ describe ( "order-controller", () => {
             const requestMock = {
 
                 body: {
-
-                    name: "iPad 9"
+                    customerId: 1,
+                    products: [
+                        {   id: 1,
+                            name: "Samsung Galaxy S4",
+                            order_product: {
+                                quantity: 30,
+                                productId: 1
+                            }
+                        },
+                        {   id: 2,
+                            name: "Samsung Galaxy S10",
+                            order_product: {
+                                quantity: 9,
+                                productId: 2
+                            }
+                        }
+                    ]
                 }
             }
 
             const responseMock = getResponseMock ()
 
+            // Override webSocket.getSocketIO ().emit ( "orders", { action: "create", data: order } ) to do nothing
+            webSocket.getSocketIO = () => {
+
+                return { emit: () => {
+
+                    } }
+            }
+
             sinon.stub ( OrderEntity, "create" )
 
-            const expectedAddedProduct = {
-                customerId: 1,
-                products: [
-                    {   id: 1,
-                        name: "Samsung Galaxy S4",
-                        order_product: {
-                            quantity: 30,
-                            productId: 1
-                        }
-                    },
-                    {   id: 2,
-                        name: "Samsung Galaxy S10",
-                        order_product: {
-                            quantity: 9,
-                            productId: 2
-                        }
-                    }
-                ]
-            }
+            const expectedAddedProduct = { id: 1, customerId: 1, date: "2021-08-27T19:34:34.438Z",
+                addProduct: ( prod ) => {
+
+                    return this
+                } }
 
             OrderEntity.create.returns ( expectedAddedProduct )
 

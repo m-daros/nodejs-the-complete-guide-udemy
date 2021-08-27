@@ -1,3 +1,3 @@
-const projectRootFolder = process.mainModule.path;
+const projectRootFolder = process.mainModule.path
 
-module.exports = projectRootFolder;
+module.exports = projectRootFolder

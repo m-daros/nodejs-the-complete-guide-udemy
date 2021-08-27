@@ -1,6 +1,6 @@
-const Sequelize = require ( "sequelize" );
+const Sequelize = require ( "sequelize" )
 
-const sequelize = require ( "../sequelize-config.js" );
+const sequelize = require ( "../sequelize-config" )
 
 const CustomerEntity = sequelize.define ( "customer", {
 
@@ -37,7 +37,7 @@ const CustomerEntity = sequelize.define ( "customer", {
             unique: false
         }
     ]
-} );
+} )
 
 const OrderEntity = sequelize.define ( "order", {
 
@@ -60,7 +60,7 @@ const OrderEntity = sequelize.define ( "order", {
             unique: false
         }
     ]
-} );
+} )
 
 const ProductEntity = sequelize.define ( "product", {
 
@@ -83,7 +83,7 @@ const ProductEntity = sequelize.define ( "product", {
             unique: false
         }
     ]
-} );
+} )
 
 const OrderProductEntity = sequelize.define ( "order_product", {
 
@@ -99,18 +99,18 @@ const OrderProductEntity = sequelize.define ( "order_product", {
         type: Sequelize.INTEGER,
         allowNull: false,
     }
-} );
+} )
 
 // A customer can have 0, 1 or more orders
 // (one to many association)
-OrderEntity.belongsTo ( CustomerEntity, { contraints: true, onDelete: "CASCADE", onUpdate: "CASCADE" } );
-CustomerEntity.hasMany ( OrderEntity );
+OrderEntity.belongsTo ( CustomerEntity, { contraints: true, onDelete: "CASCADE", onUpdate: "CASCADE" } )
+CustomerEntity.hasMany ( OrderEntity )
 
 // An order can have many products
 // and a product can belongs to many orders
 // (many to many association)
-ProductEntity.belongsToMany ( OrderEntity, { through: OrderProductEntity } );
-OrderEntity.belongsToMany ( ProductEntity, { through: OrderProductEntity } );
+ProductEntity.belongsToMany ( OrderEntity, { through: OrderProductEntity } )
+OrderEntity.belongsToMany ( ProductEntity, { through: OrderProductEntity } )
 
 module.exports = {
 
@@ -118,4 +118,4 @@ module.exports = {
     OrderEntity: OrderEntity,
     ProductEntity: ProductEntity,
     OrderProductEntity: OrderProductEntity
-};
+}

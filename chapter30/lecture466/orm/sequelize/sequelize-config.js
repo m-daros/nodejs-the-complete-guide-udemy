@@ -1,6 +1,6 @@
-const Sequelize = require ( "sequelize" );
+const Sequelize = require ( "sequelize" )
 
-const dbConfig = require ( "../../config/database-config.js" );
+const dbConfig = require ( "../../config/database-config" )
 
 const sequelize = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 
@@ -14,6 +14,6 @@ const sequelize = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD,
         acquire: dbConfig.pool.acquire,
         idle: dbConfig.pool.idle
     }
-});
+} )
 
-module.exports = sequelize;
+module.exports = sequelize
