@@ -13,7 +13,7 @@ const agent = request.agent ( app )
 
 before ( ( done ) => {
 
-    app.on ("appStarted", function(){
+    app.on ("appStarted", () => {
 
         done ()
     } )
@@ -36,7 +36,6 @@ describe ( "customer-controller", () => {
                     done ()
                 })
                 .catch ( err => done ( err ) )
-
         } )
     } )
 } )
