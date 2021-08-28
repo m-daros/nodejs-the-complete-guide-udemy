@@ -5,8 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "find ./test -name '*.spec.js' | xargs mocha -R spec",
-    "test-coverage": "find ./test -name '*.spec.js' | xargs nyc mocha -R spec"
+    "test": "find ./test/unit -name '*.spec.js' | xargs mocha -R spec",
+    "e2e-test": "find ./test/e2e -name '*.spec.js' | xargs mocha -R spec",
+    "test-coverage": "find ./test/unit -name '*.spec.js' | xargs nyc mocha -R spec"
   },
   "repository": {
     "type": "git",
@@ -25,7 +26,8 @@
     "nodemon": "^2.0.12",
     "npm": "^7.21.1",
     "nyc": "^15.1.0",
-    "sinon": "^11.1.2"
+    "sinon": "^11.1.2",
+    "supertest": "^6.1.6"
   },
   "nodemonConfig": {
     "ignore": [

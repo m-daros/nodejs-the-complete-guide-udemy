@@ -48,9 +48,15 @@ function initDB () {
 
                 console.log ( "A client established a WebSocket connection" )
             } )
-        })
+        } )
+        .then ( () => {
+
+            app.emit ( "appStarted" )
+        } )
         .catch ( error => {
 
             console.log ( `Unable to start the app due to error: ${error}` )
         } )
 }
+
+module.exports = app
