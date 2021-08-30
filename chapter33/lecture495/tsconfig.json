@@ -1,0 +1,14 @@
+// TODO Capire se questo file è usato anche da ts-node
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "rootDir": "./src/ts",
+    "outDir": "./dist",
+    "esModuleInterop": true,
+
+    // Required by sequelize-typescript
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}

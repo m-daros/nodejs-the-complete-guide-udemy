@@ -1,0 +1,1 @@
+export const projectRootFolder = process.mainModule.path
