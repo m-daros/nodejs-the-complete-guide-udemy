@@ -1,11 +1,8 @@
-const expect = require ( "chai" ).expect
-const request = require ( "supertest" )
+//import { expect } from "chai"
+import * as request from "supertest"
 
-const app = require ( "../../../app" )
-const customerController = require ( "../../../controllers/customer-controller" )
-const { CustomerEntity } = require ( "../../../orm/sequelize/model/sequelize-orm-model" )
-const { ErrorType } = require ( "../../../model/error-model" )
-const { getResponseMock } = require ( "../../test-utils" )
+import { app } from "../../../src/ts/app"
+
 
 const agent = request.agent ( app )
 

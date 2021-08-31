@@ -21,7 +21,7 @@ export enum ErrorType {
     RESOURCE_NOT_FOUND_ERROR = "resource-not-found-error"
 }
 
-export const logError = ( appError, message ) => {
+export const logError = ( appError: AppError, message: string ) => {
 
     console.error ( `errorId: ${appError.id}, message: ${message}` )
 }

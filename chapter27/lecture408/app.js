@@ -55,7 +55,7 @@ socketIO.on ( "connection", socket => {
 //             console.log ( "Listening to HTTP port 3000" );
 //
 //             // Start an handler to Websocket
-//             webSocket.init ( httpServer );
+//             webSocket.getInstance ( httpServer );
 //             const socketIO = webSocket.getSocketIO ();
 //             console.log ( "Listening to Websocket port 3000" );
 //

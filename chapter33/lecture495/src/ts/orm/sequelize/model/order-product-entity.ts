@@ -1,6 +1,6 @@
 import { Table, Column, Model, AutoIncrement, PrimaryKey, AllowNull, ForeignKey } from "sequelize-typescript"
-import { ProductEntity } from "./product-entity";
-import { OrderEntity } from "./order-entity";
+import ProductEntity from "./product-entity";
+import OrderEntity from "./order-entity";
 
 @Table
 export class OrderProductEntity extends Model<OrderProductEntity> {

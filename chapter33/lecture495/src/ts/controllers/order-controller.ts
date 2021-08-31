@@ -1,125 +1,136 @@
 import { validationResult } from "express-validator"
 
-import sequelize from "../orm/sequelize/sequelize-config"
-import { ProductEntity }  from "../orm/sequelize/model/product-entity"
-import { OrderEntity }  from "../orm/sequelize/model/order-entity"
-import { getSocketIO } from "../websocket/websocket"
+import OrmManager from "../orm/sequelize/sequelize-config"
+import ProductEntity from "../orm/sequelize/model/product-entity"
+import OrderEntity  from "../orm/sequelize/model/order-entity"
+import SocketIO from "../websocket/websocket"
 import { AppError, ErrorType, logError }  from "../model/error-model"
 
-export const addOrder = async ( request, response, next ) => {
+export class OrderController {
 
-    try {
+    private ormManager
+    private socketIO
 
-        const orderToCreate = request.body
-        orderToCreate.date = new Date ()
+    public constructor ( ormManager: OrmManager, socketIO: SocketIO ) {
 
-        const errors = validationResult ( request )
+        this.ormManager = ormManager
+        this.socketIO = socketIO
+    }
 
-        if ( ! errors.isEmpty () ) {
+    public addOrder = async ( request, response, next ) => {
 
-            const appError = new AppError ( ErrorType.VALIDATION_ERROR, "Unable to add order due to validation error" )
-            logError ( appError, `Unable to add order due to validation error` )
+        try {
 
-            response.status ( 400 ).json ( appError )
+            const orderToCreate = request.body
+            orderToCreate.date = new Date ()
+
+            const errors = validationResult ( request )
+
+            if ( ! errors.isEmpty () ) {
+
+                const appError = new AppError ( ErrorType.VALIDATION_ERROR, "Unable to add order due to validation error" )
+                logError ( appError, `Unable to add order due to validation error` )
+
+                response.status ( 400 ).json ( appError )
+            }
+            else {
+
+                const order = await this.saveOrder ( orderToCreate )
+
+                // Emit an event to the "topic" orders
+                await this.socketIO.emit ( "orders", { action: "create", data: order } )
+
+                response.status ( 201 ).json ( order )
+            }
         }
-        else {
+        catch ( error )  {
 
-            const order = await saveOrder ( orderToCreate )
+            const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to add the order" )
+            logError ( appError, `Unable to add order due to error ${error}` )
 
-            // Emit an event to the "topic" orders
-            await getSocketIO ().emit ( "orders", { action: "create", data: order } )
-
-            response.status ( 201 ).json ( order )
-        }
-    }
-    catch ( error )  {
-
-        const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to add the order" )
-        logError ( appError, `Unable to add order due to error ${error}` )
-
-        response.status ( 500 ).json ( appError )
-    }
-}
-
-export const getOrders = async ( request, response, next ) => {
-
-    try {
-
-        // TODO get customerId from the logged user
-        const orders = await OrderEntity.findAll ( { where: { customerId: 1 }, include: ProductEntity } )
-
-        response.status ( 200 ).json ( orders )
-
-    }
-    catch ( error ) {
-
-        const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to get orders" )
-        logError ( appError, `Unable to get orders due to error ${error}` )
-
-        response.status ( 500 ).json ( appError )
-    }
-}
-
-export const getOrder = async ( request, response, next ) => {
-
-    const orderId = parseInt ( request.params.orderId , 10 )
-
-    try {
-
-        const order = OrderEntity.findByPk ( orderId, { include: ProductEntity } )
-
-        if ( ! order ) {
-
-            const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find the order with id ${orderId}` )
-            logError ( appError, `Unable to find the order with id ${orderId}` )
-
-            response.status ( 404 ).json ( appError )
-        }
-        else {
-
-            response.status ( 200 ).json ( order )
+            response.status ( 500 ).json ( appError )
         }
     }
-    catch ( error ) {
 
-        const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find the order with id ${orderId}` )
-        logError ( appError, `Unable to find the order with id ${orderId} due to error ${error}` )
+    public getOrders = async ( request, response, next ) => {
 
-        response.status ( 500 ).json ( appError )
+        try {
+
+            // TODO get customerId from the logged user
+            const orders = await OrderEntity.findAll ( { where: { customerId: 1 }, include: ProductEntity } )
+
+            response.status ( 200 ).json ( orders )
+
+        }
+        catch ( error ) {
+
+            const appError = new AppError ( ErrorType.APPLICATION_ERROR, "Unable to get orders" )
+            logError ( appError, `Unable to get orders due to error ${error}` )
+
+            response.status ( 500 ).json ( appError )
+        }
     }
-}
 
-const saveOrder = async ( orderToCreate ) => {
+    public getOrder = async ( request, response, next ) => {
 
-    const transaction = await sequelize.transaction ()
+        const orderId = parseInt ( request.params.orderId , 10 )
 
-    try {
+        try {
 
-        const order = await OrderEntity.create ( orderToCreate, { transaction: transaction } )
-        const promises = []
+            const order = await OrderEntity.findByPk ( orderId, { include: ProductEntity } )
 
-        orderToCreate.products.forEach ( product => {
+            if ( ! order ) {
 
-            promises.push ( addProductToOrder ( product, order, transaction ) )
-        } )
+                const appError = new AppError ( ErrorType.RESOURCE_NOT_FOUND_ERROR, `Unable to find the order with id ${orderId}` )
+                logError ( appError, `Unable to find the order with id ${orderId}` )
 
-        await Promise.all ( promises )
+                response.status ( 404 ).json ( appError )
+            }
+            else {
 
-        await transaction.commit ()
+                response.status ( 200 ).json ( order )
+            }
+        }
+        catch ( error ) {
 
-        return order
+            const appError = new AppError ( ErrorType.APPLICATION_ERROR, `Unable to find the order with id ${orderId}` )
+            logError ( appError, `Unable to find the order with id ${orderId} due to error ${error}` )
+
+            response.status ( 500 ).json ( appError )
+        }
     }
-    catch ( error ) {
 
-        transaction.rollback ()
-        throw error
+    private saveOrder = async ( orderToCreate ) => {
+
+        const transaction = await this.ormManager.getOrmMapper ().transaction ()
+
+        try {
+
+            const order = await OrderEntity.create ( orderToCreate, { transaction: transaction } )
+            const promises = []
+
+            orderToCreate.products.forEach ( product => {
+
+                promises.push ( this.addProductToOrder ( product, order, transaction ) )
+            } )
+
+            await Promise.all ( promises )
+            await transaction.commit ()
+
+            return order
+        }
+        catch ( error ) {
+
+            transaction.rollback ()
+            throw error
+        }
     }
-}
 
-const addProductToOrder = async ( product, order, transaction ) => {
+    private addProductToOrder = async ( product, order, transaction ) => {
 
-    // Doesn't work if we add the product received from the request body, so as workaround we find the product doing a DB query
-    const foundProd = await ProductEntity.findByPk ( product.order_product.productId, { transaction: transaction } )
+        // Doesn't work if we add the product received from the request body, so as workaround we find the product doing a DB query
+        const foundProd = await ProductEntity.findByPk ( product.order_product.productId, { transaction: transaction } )
 
-    return order.addProduct ( foundProd, { through: { quantity: product.order_product.quantity }, transaction } )
+        return order.addProduct ( foundProd, { through: { quantity: product.order_product.quantity }, transaction } )
+    }
 }

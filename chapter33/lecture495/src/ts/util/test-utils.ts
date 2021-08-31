@@ -1,13 +1,13 @@
-exports.getResponseMock = () => {
+export const getResponseMock = () => {
 
     return {
 
-        status: null,
+        httpStatus: null,
         content: null,
 
-        status: function ( status ) {
+        status: function ( httpStatus ) {
 
-            this.status = status
+            this.httpStatus = httpStatus
             return this
         },
 

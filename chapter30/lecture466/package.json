@@ -20,14 +20,17 @@
   },
   "homepage": "https://github.com/m-daros/nodejs-the-complete-guide-udemy#readme",
   "devDependencies": {
+    "@types/jest": "^27.0.1",
     "chai": "^4.3.4",
     "install": "^0.13.0",
+    "jest": "^27.1.0",
     "mocha": "^9.1.0",
     "nodemon": "^2.0.12",
     "npm": "^7.21.1",
     "nyc": "^15.1.0",
     "sinon": "^11.1.2",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "ts-jest": "^27.0.5"
   },
   "nodemonConfig": {
     "ignore": [

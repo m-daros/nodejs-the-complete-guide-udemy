@@ -1,4 +1,4 @@
-import { ProductEntity } from "../orm/sequelize/model/product-entity"
+import ProductEntity from "../orm/sequelize/model/product-entity"
 import { catchErrors } from "../util/error-handling"
 import { AppError, ErrorType, logError } from "../model/error-model"
 

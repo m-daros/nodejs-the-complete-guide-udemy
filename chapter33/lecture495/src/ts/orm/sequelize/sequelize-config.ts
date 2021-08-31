@@ -1,25 +1,54 @@
 import { Sequelize } from "sequelize-typescript"
 
-import { CustomerEntity } from "./model/customer-entity";
-import { OrderEntity } from "./model/order-entity";
+import CustomerEntity from "./model/customer-entity";
+import OrderEntity from "./model/order-entity";
 import { OrderProductEntity } from "./model/order-product-entity";
-import { ProductEntity } from "./model/product-entity";
+import ProductEntity from "./model/product-entity";
 import dbConfig from "../../config/database-config"
 
-const sequelize = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+export default class OrmManager {
 
-    host: dbConfig.HOST,
-    dialect: dbConfig.DIALECT,
+    private ormMapper
 
-    pool: {
+    constructor () {
 
-        min: dbConfig.POOL.MIN,
-        max: dbConfig.POOL.MAX,
-        acquire: dbConfig.POOL.ACQUIRE,
-        idle: dbConfig.POOL.IDLE
+        this.ormMapper = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+
+            host: dbConfig.HOST,
+            dialect: dbConfig.DIALECT,
+
+            pool: {
+
+                min: dbConfig.POOL.MIN,
+                max: dbConfig.POOL.MAX,
+                acquire: dbConfig.POOL.ACQUIRE,
+                idle: dbConfig.POOL.IDLE
+            }
+        } )
+
+        this.ormMapper.addModels ( [ CustomerEntity, OrderEntity, OrderProductEntity, ProductEntity ] )
     }
-} )
 
-sequelize.addModels ( [ CustomerEntity, OrderEntity, OrderProductEntity, ProductEntity ] )
+    public getOrmMapper (): Sequelize {
 
-export default sequelize
+        return this.ormMapper
+    }
+}
+
+// const sequelize = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
+//
+//     host: dbConfig.HOST,
+//     dialect: dbConfig.DIALECT,
+//
+//     pool: {
+//
+//         min: dbConfig.POOL.MIN,
+//         max: dbConfig.POOL.MAX,
+//         acquire: dbConfig.POOL.ACQUIRE,
+//         idle: dbConfig.POOL.IDLE
+//     }
+// } )
+//
+// sequelize.addModels ( [ CustomerEntity, OrderEntity, OrderProductEntity, ProductEntity ] )
+//
+// export default sequelize

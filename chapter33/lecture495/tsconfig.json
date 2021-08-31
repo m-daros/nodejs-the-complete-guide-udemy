@@ -10,5 +10,9 @@
     // Required by sequelize-typescript
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-  }
+  },
+  "exclude": [
+
+    "./test", "jest*"
+  ]
 }

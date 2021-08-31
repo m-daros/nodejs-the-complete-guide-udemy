@@ -1,16 +1,22 @@
 import express, { Router, Request, Response, NextFunction } from "express"
-import sequelize from "./orm/sequelize/sequelize-config"
-import * as webSocket from "./websocket/websocket"
-import { router } from "./routes/routes"
-import { CustomerEntity } from "./orm/sequelize/model/customer-entity"
-import { ProductEntity } from "./orm/sequelize/model/product-entity"
+import SocketIO from "./websocket/websocket"
+import Routes from "./routes/routes"
+import OrmManager from "./orm/sequelize/sequelize-config"
+import CustomerEntity from "./orm/sequelize/model/customer-entity"
+import ProductEntity from "./orm/sequelize/model/product-entity"
+import { CustomerController } from "./controllers/customer-controller";
+import { OrderController } from "./controllers/order-controller";
 
-const app = express ()
+export const app = express ()
 const port = 3000
+
+let ormManager
 
 const initDB = async () => {
 
-    await sequelize.sync ( { force: true } )
+    ormManager = new OrmManager () // TODO Passare la configurazione
+
+    await ormManager.getOrmMapper ().sync ( { force: true } )
 
     // Add some customer
     CustomerEntity.create ( { name: "Mario", surname: "Rossi", age: 24 } as CustomerEntity )
@@ -23,21 +29,24 @@ const initDB = async () => {
 
 const initWebServer = async () => {
 
-    // const app = express ()
-    app.use ( "/api/v1", router )
-
     const httpServer = await app.listen ( port )
+    const socketIO = SocketIO.getInstance ( httpServer )
+
+    const customerController = new CustomerController ()
+    const orderController = new OrderController ( ormManager, socketIO )
+    const routes = new Routes ( customerController, orderController )
+
+    // const app = express ()
+    app.use ( "/api/v1", routes.buildRoutes () )
 
     console.log ( `app started and listen to port ${port}` )
 
-    return httpServer
+    return socketIO
 }
 
-const initSocketIO = async ( httpServer ) => {
+const initSocketIO = async ( socketIO ) => {
 
     // Start an handler to Websocket
-    webSocket.init ( httpServer )
-    const socketIO = webSocket.getSocketIO ()
     console.log ( `Listening to Websocket port ${port}` )
 
     socketIO.on ( "connection", socket => {
@@ -48,5 +57,5 @@ const initSocketIO = async ( httpServer ) => {
 
 initDB ()
     .then ( () => initWebServer() )
-    .then ( ( httpServer ) => initSocketIO ( httpServer ) )
+    .then ( ( socketIO ) => initSocketIO ( socketIO ) )
     .then ( () => app.emit ( "appStarted" ) )

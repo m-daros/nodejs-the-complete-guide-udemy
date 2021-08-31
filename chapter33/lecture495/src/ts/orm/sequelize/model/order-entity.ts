@@ -1,10 +1,10 @@
-import {Table, Column, Model, AutoIncrement, PrimaryKey, AllowNull, Index, BelongsTo, BelongsToMany, ForeignKey} from "sequelize-typescript"
-import {CustomerEntity} from "./customer-entity";
-import {ProductEntity} from "./product-entity";
-import {OrderProductEntity} from "./order-product-entity";
+import { Table, Column, Model, AutoIncrement, PrimaryKey, AllowNull, Index, BelongsTo, BelongsToMany, ForeignKey } from "sequelize-typescript"
+import CustomerEntity from "./customer-entity";
+import ProductEntity from "./product-entity";
+import { OrderProductEntity } from "./order-product-entity";
 
 @Table
-export class OrderEntity extends Model<OrderEntity> {
+export default class OrderEntity extends Model<OrderEntity> {
 
     @PrimaryKey
     @AutoIncrement
