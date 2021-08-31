@@ -34,21 +34,3 @@ export default class OrmManager {
         return this.ormMapper
     }
 }
-
-// const sequelize = new Sequelize ( dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
-//
-//     host: dbConfig.HOST,
-//     dialect: dbConfig.DIALECT,
-//
-//     pool: {
-//
-//         min: dbConfig.POOL.MIN,
-//         max: dbConfig.POOL.MAX,
-//         acquire: dbConfig.POOL.ACQUIRE,
-//         idle: dbConfig.POOL.IDLE
-//     }
-// } )
-//
-// sequelize.addModels ( [ CustomerEntity, OrderEntity, OrderProductEntity, ProductEntity ] )
-//
-// export default sequelize
