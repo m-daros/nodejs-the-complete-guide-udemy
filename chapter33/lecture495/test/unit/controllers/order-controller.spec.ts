@@ -1,3 +1,5 @@
+import { Sequelize } from "sequelize-typescript";
+
 import { OrderController } from "../../../src/ts/controllers/order-controller"
 import OrderEntity from "../../../src/ts/orm/sequelize/model/order-entity"
 import ProductEntity from "../../../src/ts/orm/sequelize/model/product-entity";
@@ -5,7 +7,6 @@ import { ErrorType } from "../../../src/ts/model/error-model"
 import { getResponseMock } from "../../../src/ts/util/test-utils"
 import SocketIO from "../../../src/ts/websocket/websocket"
 import OrmManager from "../../../src/ts/orm/sequelize/sequelize-config";
-import { Sequelize } from "sequelize-typescript";
 
 // beforeEach ( () => {
 //
@@ -315,11 +316,20 @@ describe ( "order-controller", () => {
             const orderEntityMock = jest.spyOn ( OrderEntity,"create" )
                 .mockImplementation (() => Promise.resolve ( expectedAddedProduct ) )
 
-            const bbbMock = {}
+            jest.mock ("../../../src/ts/websocket/websocket" )
+            const getInstanceMock = jest.fn ().mockReturnValue ({
+
+                emit () {
+
+                }
+            } )
+
+            SocketIO.getInstance = getInstanceMock
 
             // Mocks SocketIO.getInstance ().emit ( "orders", { action: "create", data: order } ) to do nothing
-            const socketIoMock = jest.spyOn ( SocketIO, "getInstance" )
-                .mockImplementation ( () => { () => { emit: ( message ) => {} } } )
+//             const socketIoMock = jest.spyOn ( SocketIO, "getInstance" )
+// //                .mockImplementation ( () => { () => { emit: ( message ) => {} } } )
+//                 .mockImplementation ( () => mmm )
 
             const productEntityMock = jest.spyOn ( ProductEntity,"findByPk" )
                 .mockImplementation ( ( productId )  => Promise.resolve ( { id: productId, name: "Samsung Galaxy S4", orders: [] } as ProductEntity ) )
@@ -343,7 +353,8 @@ describe ( "order-controller", () => {
                 getOrmMapper () { return sequelizeMock }
             } as OrmManager
 
-            const orderController = new OrderController ( ormManagerMock, socketIoMock )
+            const orderController = new OrderController ( ormManagerMock, SocketIO )
+//            const orderController = new OrderController ( ormManagerMock, socketIoMock )
 
             // Test the service
             return orderController.addOrder ( requestMock, responseMock, () => {} ).then ( () => {
