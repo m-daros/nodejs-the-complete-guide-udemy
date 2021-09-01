@@ -8,39 +8,11 @@ export default class SocketIO {
 
     public static getInstance = ( httpServer ) => {
 
-        if ( ! this.socketIO ) {
+        if ( ! SocketIO.socketIO ) {
 
-            this.socketIO = require ( "socket.io" ) ( httpServer )
+            SocketIO.socketIO = require ( "socket.io" ) ( httpServer )
         }
 
-        return this.socketIO
+        return SocketIO.socketIO
     }
-
-    // getSocketIO = () => {
-    //
-    //     if ( ! this.socketIO ) {
-    //
-    //         console.error ( "SocketIO not initialized" )
-    //         throw new Error ( "SocketIO not initialized" )
-    //     }
-    //
-    //     return this.socketIO
-    // }
 }
-// let socketIO
-//
-// export const getInstance = ( httpServer ) => {
-//
-//     socketIO = require ( "socket.io" ) ( httpServer )
-// }
-//
-// export const getSocketIO = () => {
-//
-//     if ( ! socketIO ) {
-//
-//         console.error ( "SocketIO not initialized" )
-//         throw new Error ( "SocketIO not initialized" )
-//     }
-//
-//     return socketIO
-// }
